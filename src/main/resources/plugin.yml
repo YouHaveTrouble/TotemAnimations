@@ -1,0 +1,9 @@
+name: TotemAnimations
+version: 1.0
+main: me.youhavetrouble.totemanimations.TotemAnimations
+api-version: 1.14
+commands:
+  totemanimation:
+    description: Displays totem animation
+    permission: totemanimation.command
+    usage: "Usage: totemanimation <player> <custom_model_data>"
