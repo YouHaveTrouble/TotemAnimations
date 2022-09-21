@@ -7,3 +7,7 @@ commands:
     description: Displays totem animation
     permission: totemanimation.command
     usage: "Usage: totemanimation <player> <custom_model_data>"
+permissions:
+  totemanimation.command:
+    default: op
+    description: Allows usage of /totemanimation command
