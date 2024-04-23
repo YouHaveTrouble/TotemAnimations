@@ -28,15 +28,14 @@ public class TotemCommandExecutor implements TabExecutor {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> suggestions = new ArrayList<>();
-        if (args.length == 1) {
-            Bukkit.getOnlinePlayers().forEach(player -> {
-                if (sender instanceof Player) {
-                    Player senderPlayer = (Player) sender;
-                    if (!senderPlayer.canSee(player)) return;
-                    suggestions.add(player.getName());
-                }
-            });
-        }
+        if (args.length != 1) return suggestions;
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            if (sender instanceof Player) {
+                Player senderPlayer = (Player) sender;
+                if (!senderPlayer.canSee(player)) return;
+                suggestions.add(player.getName());
+            }
+        });
         return suggestions;
     }
 }
