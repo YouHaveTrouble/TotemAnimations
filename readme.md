@@ -4,7 +4,8 @@
 You can download the plugin [on Modrinth](https://modrinth.com/plugin/totemanimations).
 
 ## Usage
-`/totemanimation <player> <custom_model_data>` command allows you to display totem animation with provided CustomModelData to specified player. Obviously, that player has to have resource pack with CustomModelData totems enabled.
+`/totemanimation <player> <model_key>` command allows you to display totem animation with
+provided model to specified player.
 
 ## API
 Plugin can be used as an API
@@ -25,5 +26,5 @@ Plugin can be used as an API
 ```
 
 ```java
-TotemAnimations.playTotemAnimation(Player player, int customModelData);
+TotemAnimations.playTotemAnimation(Player player, Key model);
 ```

@@ -1,14 +1,5 @@
 name: TotemAnimations
-version: 1.0
+version: 2.0.0
 main: me.youhavetrouble.totemanimations.TotemAnimations
-api-version: 1.14
+api-version: 26.1
 folia-supported: true
-commands:
-  totemanimation:
-    description: Displays totem animation
-    permission: totemanimation.command
-    usage: "Usage: totemanimation <player> <custom_model_data>"
-permissions:
-  totemanimation.command:
-    default: op
-    description: Allows usage of /totemanimation command
