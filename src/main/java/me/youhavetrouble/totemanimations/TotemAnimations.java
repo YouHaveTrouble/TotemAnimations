@@ -1,16 +1,13 @@
 package me.youhavetrouble.totemanimations;
 
-import com.mojang.brigadier.Command;
+import com.mojang.brigadier.tree.CommandNode;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
-import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
-import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.CustomModelData;
 import io.papermc.paper.plugin.lifecycle.event.LifecycleEventManager;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.key.Key;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
 import org.bukkit.EntityEffect;
 import org.bukkit.Material;
@@ -22,8 +19,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 public final class TotemAnimations extends JavaPlugin {
 
     @Override
@@ -31,31 +26,24 @@ public final class TotemAnimations extends JavaPlugin {
         LifecycleEventManager<@NotNull Plugin> manager = getLifecycleManager();
         manager.registerEventHandler(LifecycleEvents.COMMANDS, event -> {
             final Commands commands = event.registrar();
-            commands.register(Commands.literal("totemanimation")
-                    .requires(css -> css.getSender().hasPermission("totemanimations.command"))
-                    .then(Commands.argument("players", ArgumentTypes.players())
+
+            CommandNode<CommandSourceStack> playersNode = TotemCommands.modelArgument.build();
+            CommandNode<CommandSourceStack> modelNode = playersNode.getChildren().stream()
+                    .filter(node -> "model".equals(node.getName()))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("model node missing"));
+
+            CommandNode<CommandSourceStack> customModelDataNode = TotemCommands.customModelDataArgument
+                    .redirect(modelNode)
+                    .build();
+
+            modelNode.addChild(customModelDataNode);
+
+            commands.register(
+                    Commands.literal("totemanimation")
                             .requires(css -> css.getSender().hasPermission("totemanimations.command"))
-                            .then(Commands.argument("model", ArgumentTypes.key())
-                                    .requires(css -> css.getSender().hasPermission("totemanimations.command"))
-                                    .executes(context -> {
-                                        PlayerSelectorArgumentResolver targetResolver = context.getArgument("players", PlayerSelectorArgumentResolver.class);
-                                        List<Player> players = targetResolver.resolve(context.getSource());
-                                        Key key = context.getArgument("model", Key.class);
-                                        for (Player player : players) {
-                                            TotemAnimations.playTotemAnimation(player, key);
-                                        }
-                                        String feedback = "Displayed totem animation to " + players.size() + " players";
-                                        if (players.isEmpty()) {
-                                            feedback = "No players matching selector found.";
-                                        } else if (players.size() == 1) {
-                                            feedback = "Displayed totem animation to " + players.getFirst().getName();
-                                        }
-                                        context.getSource().getSender().sendMessage(Component.text(feedback, NamedTextColor.GRAY));
-                                        return Command.SINGLE_SUCCESS;
-                                    })
-                            )
-                    )
-                    .build()
+                            .then(playersNode)
+                            .build()
             );
         });
         getServer().getPluginManager().addPermission(
