@@ -14,6 +14,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
 import org.bukkit.EntityEffect;
 import org.bukkit.Material;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permission;
@@ -25,6 +26,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public final class TotemAnimations extends JavaPlugin {
+
+    private static final String totemUseSound = "item.totem.use";
 
     @Override
     public void onEnable() {
@@ -82,6 +85,7 @@ public final class TotemAnimations extends JavaPlugin {
         ItemStack hand = player.getInventory().getItemInMainHand();
         player.getInventory().setItemInMainHand(totem);
         player.playEffect(EntityEffect.PROTECTED_FROM_DEATH);
+        player.stopSound(totemUseSound, SoundCategory.PLAYERS);
         player.getInventory().setItemInMainHand(hand);
     }
 
@@ -114,6 +118,7 @@ public final class TotemAnimations extends JavaPlugin {
         ItemStack hand = player.getInventory().getItemInMainHand();
         player.getInventory().setItemInMainHand(totem);
         player.playEffect(EntityEffect.PROTECTED_FROM_DEATH);
+        player.stopSound(totemUseSound, SoundCategory.PLAYERS);
         player.getInventory().setItemInMainHand(hand);
     }
 
